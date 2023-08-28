@@ -4,6 +4,7 @@ const path = require('path')
 const ffmpeg = require('fluent-ffmpeg');
 const { uploadFile } = require('./awsController');
 const urlModel = require('../models/model.js')
+const os = require('os');
 
 const getData = (req, res) => {
     console.log("=====>", path.join(__dirname, '..', 'views', 'index.html'));
@@ -19,7 +20,7 @@ const uploadData = async (req, res) => {
 
         let extension = path.extname(req.file.originalname)
 
-        if(extension !== '.mp4'){
+        if (extension !== '.mp4') {
             return res.status(400).send({ status: false, message: "Upload Video file Only.!!" })
         }
 
@@ -62,7 +63,15 @@ const uploadData = async (req, res) => {
                     fs.unlinkSync(inputFilePath);
                     fs.unlinkSync(compressedOutput);
 
-                    return res.status(201).send({ status: true, message: "Video upload successfully" })
+                    const serverUrl = `${req.protocol}://${req.get('host')}/download/${req.file.originalname}`;
+
+                    let response = {
+                        status: true,
+                        message: "Video upload successfully",
+                        url: serverUrl
+
+                    }
+                    return res.status(201).send(response)
                 }
             )
             .on('error', (error) => {
