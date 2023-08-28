@@ -13,9 +13,9 @@ const dir = 'public';
 const subDirectory = 'public/uploads'
 
 if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
+    // fs.mkdirSync(dir);
 
-    fs.mkdirSync(subDirectory)
+    // fs.mkdirSync(subDirectory)
 }
 
 const storage = multer.diskStorage({
